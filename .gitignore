@@ -1,0 +1,40 @@
+# Virtual environment
+autodocenv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.so
+
+# Logs and local DB
+*.log
+*.sqlite3
+
+# Environment variables
+.env
+
+# PyCharm project files
+.idea/
+
+# VS Code project files (just in case)
+.vscode/
+
+# OS system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Media / temp files (optional)
+*.bak
+*.swp
+*.tmp
+
+# Compiled assets (optional if any frontend build tools)
+node_modules/
+build/
+dist/
+
+# Coverage, test results
+htmlcov/
+coverage.xml
+.pytest_cache/
