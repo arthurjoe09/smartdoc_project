@@ -29,6 +29,7 @@ class DocumentForm(forms.ModelForm):
         title = cleaned_data.get("title")
         author = cleaned_data.get("author")
 
+        #custom validation by overriding the clean method
         if title and author and title.lower() == author.lower():
             raise forms.ValidationError("Title and Author cannot be the same")
         return cleaned_data
@@ -37,3 +38,7 @@ class DocumentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['file'].required = True
+
+
+class FileUploadForm(forms.Form):
+    file = forms.FileField(widget=forms.ClearableFileInput(attrs={'class': 'form-control'}))
