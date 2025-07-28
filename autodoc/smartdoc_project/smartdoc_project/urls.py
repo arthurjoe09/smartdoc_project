@@ -20,14 +20,17 @@ from core.views import upload_document
 from django.conf import settings
 from django.conf.urls.static import static
 from core.views import upload_file
+from core.views import document_pdf
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('upload/', upload_document, name='upload_document'),
     path('upload_success/',upload_document,name='upload_success'),
     path('upload-file/', upload_file, name='upload_file'),
-]
+    path('pdf/<int:doc_id>/', document_pdf, name='document_pdf'),
 
+]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
