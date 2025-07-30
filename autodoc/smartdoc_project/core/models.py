@@ -23,10 +23,22 @@ class Document(models.Model):
 
 #new model to store imported documents from files.
 class ImportedDocument(models.Model):
+
     title = models.CharField(max_length=100)
     author = models.CharField(max_length=100)
     doc_type = models.CharField(max_length=10)
     uploaded_at = models.DateTimeField(auto_now_add=True)
+    qr_code = models.ImageField(upload_to='qr_codes/', null=True, blank=True)
+    barcode = models.ImageField(upload_to='barcodes/', null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # Save first to get instance.id
+        from core.utils import generate_qr_code, generate_barcode
+        generate_qr_code(self)
+        generate_barcode(self)
+        super().save(update_fields=['qr_code', 'barcode'])  # Save again to store images
 
     def __str__(self):
         return f"{self.title} by {self.author}"
+
+

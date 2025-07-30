@@ -9,6 +9,7 @@ from django.template.loader import render_to_string
 from weasyprint import HTML
 from django.http import HttpResponse
 from .models import ImportedDocument
+from .utils import generate_qr_code,generate_barcode
 
 
 def upload_document(request): #request contains everything from the user's HTTP request, such as:form data (request.POST)
@@ -27,6 +28,7 @@ def upload_document(request): #request contains everything from the user's HTTP 
 
 
 def upload_file(request):
+
     if request.method == 'POST':
         form = FileUploadForm(request.POST, request.FILES)#This creates a bound form using the user’s input:
         if form.is_valid(): #This runs the form's built-in validation, which:Calls .clean() methods,Verifies required fields,
@@ -38,21 +40,27 @@ def upload_file(request):
                 if file_name.endswith('.csv'):
                     df = pd.read_csv(file)#pd.read_csv() → from pandas (not built-in), reads the file-like object into a DataFrame.
                     for _, row in df.iterrows():# df.iterrows() yields each row as a tuple of (index, row).
-                        ImportedDocument.objects.create(
+                       instance= ImportedDocument.objects.create(
                             title=row['title'],
                             author=row['author'],
                             doc_type=row['doc_type']
                         )
+                       print('csv file created')
+                       generate_qr_code(instance)
+                       generate_barcode(instance)
+                       instance.save()
 
                 elif file_name.endswith('.xlsx'):
                     df = pd.read_excel(file)
                     for _, row in df.iterrows():
-                        ImportedDocument.objects.create(
+                        instance=ImportedDocument.objects.create(
                             title=row['title'],
                             author=row['author'],
                             doc_type=row['doc_type']
                         )
-
+                        generate_qr_code(instance)
+                        generate_barcode(instance)
+                        instance.save()
                 #ET.parse(file): parses uploaded file into an ElementTree.
 
                 # getroot(): gets the root XML tag.
@@ -67,19 +75,22 @@ def upload_file(request):
                         author = doc.find('author').text
                         doc_type = doc.find('doc_type').text
 
-                        ImportedDocument.objects.create(
+                        instance=ImportedDocument.objects.create(
                             title=title,
                             author=author,
                             doc_type=doc_type
                         )
-
+                        generate_qr_code(instance)
+                        generate_barcode(instance)
+                        instance.save()
                 else:
                     messages.error(request, "Unsupported file format.")
+                    messages.success(request, "Data imported successfully.")
                     return redirect('upload_file')
 
 
 
-                    messages.success(request, "Data imported successfully.")
+
                 return redirect('upload_file')
 
             except Exception as e:
