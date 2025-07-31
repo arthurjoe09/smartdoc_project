@@ -139,3 +139,5 @@ LOGGING = {
         'level': 'DEBUG',
     },
 }
+
+WKHTMLTOIMAGE_CMD = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltoimage.exe'

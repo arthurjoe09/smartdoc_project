@@ -9,10 +9,10 @@ from django.template.loader import render_to_string
 from weasyprint import HTML
 from django.http import HttpResponse
 from .models import ImportedDocument
-from .utils import generate_qr_code,generate_barcode
+from .utils import generate_qr_code,generate_barcode,generate_html_image
 
 
-def upload_document(request): #request contains everything from the user's HTTP request, such as:form data (request.POST)
+def upload_document(request): #'request' contains everything from the user's HTTP request, such as:form data (request.POST)
                                                                                         #Uploaded files (request.FILES) ,Metadata (headers, user, method, cookies...)
     if  request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
@@ -35,6 +35,7 @@ def upload_file(request):
                             # Populates form.cleaned_data.
             file = request.FILES['file'] #Access the uploaded file by key 'file' from the MultiValueDict.
             file_name = file.name.lower()
+            document_image = request.FILES.get('document_image')
 
             try:
                 if file_name.endswith('.csv'):
@@ -43,11 +44,13 @@ def upload_file(request):
                        instance= ImportedDocument.objects.create(
                             title=row['title'],
                             author=row['author'],
-                            doc_type=row['doc_type']
+                            doc_type=row['doc_type'],
+                            document_image= document_image,
                         )
                        print('csv file created')
                        generate_qr_code(instance)
                        generate_barcode(instance)
+                       generate_html_image(instance)
                        instance.save()
 
                 elif file_name.endswith('.xlsx'):
@@ -56,10 +59,12 @@ def upload_file(request):
                         instance=ImportedDocument.objects.create(
                             title=row['title'],
                             author=row['author'],
-                            doc_type=row['doc_type']
+                            doc_type=row['doc_type'],
+                            document_image=document_image,
                         )
                         generate_qr_code(instance)
                         generate_barcode(instance)
+                        generate_html_image(instance)
                         instance.save()
                 #ET.parse(file): parses uploaded file into an ElementTree.
 
@@ -78,10 +83,12 @@ def upload_file(request):
                         instance=ImportedDocument.objects.create(
                             title=title,
                             author=author,
-                            doc_type=doc_type
+                            doc_type=doc_type,
+                            document_image=document_image,
                         )
                         generate_qr_code(instance)
                         generate_barcode(instance)
+                        generate_html_image(instance)
                         instance.save()
                 else:
                     messages.error(request, "Unsupported file format.")

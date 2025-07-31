@@ -42,3 +42,4 @@ class DocumentForm(forms.ModelForm):
 
 class FileUploadForm(forms.Form):
     file = forms.FileField(widget=forms.ClearableFileInput(attrs={'class': 'form-control'}))
+    document_image = forms.ImageField(required=False)

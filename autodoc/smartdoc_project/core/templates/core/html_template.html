@@ -1,0 +1,22 @@
+<!-- templates/core/html_template.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .doc-box {
+            border: 2px dashed #444;
+            padding: 20px;
+            width: 400px;
+        }
+    </style>
+</head>
+<body>
+    <div class="doc-box">
+        <h2>{{ doc.title }}</h2>
+        <p><strong>Author:</strong> {{ doc.author }}</p>
+        <p><strong>Type:</strong> {{ doc.doc_type }}</p>
+    </div>
+</body>
+</html>

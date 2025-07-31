@@ -30,6 +30,8 @@ class ImportedDocument(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
     qr_code = models.ImageField(upload_to='qr_codes/', null=True, blank=True)
     barcode = models.ImageField(upload_to='barcodes/', null=True, blank=True)
+    document_image = models.ImageField(upload_to='doc_images/', null=True, blank=True)
+    html_image = models.ImageField(upload_to='html_images/', null=True, blank=True)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)  # Save first to get instance.id
