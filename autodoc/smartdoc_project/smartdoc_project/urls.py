@@ -21,7 +21,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from core.views import upload_file
 from core.views import document_pdf
-
+from core.views import preview_document
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,6 +29,7 @@ urlpatterns = [
     path('upload_success/',upload_document,name='upload_success'),
     path('upload-file/', upload_file, name='upload_file'),
     path('pdf/<int:doc_id>/', document_pdf, name='document_pdf'),
+    path('preview/<int:pk>/', preview_document, name='preview_document'),
 
 ]
 

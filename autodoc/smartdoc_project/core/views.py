@@ -10,7 +10,8 @@ from weasyprint import HTML
 from django.http import HttpResponse
 from .models import ImportedDocument
 from .utils import generate_qr_code,generate_barcode,generate_html_image
-
+from django.shortcuts import render, get_object_or_404
+from .models import ImportedDocument
 
 def upload_document(request): #'request' contains everything from the user's HTTP request, such as:form data (request.POST)
                                                                                         #Uploaded files (request.FILES) ,Metadata (headers, user, method, cookies...)
@@ -52,6 +53,7 @@ def upload_file(request):
                        generate_barcode(instance)
                        generate_html_image(instance)
                        instance.save()
+                    return redirect('preview_document', pk=instance.pk)
 
                 elif file_name.endswith('.xlsx'):
                     df = pd.read_excel(file)
@@ -66,6 +68,7 @@ def upload_file(request):
                         generate_barcode(instance)
                         generate_html_image(instance)
                         instance.save()
+                    return redirect('preview_document', pk=instance.pk)
                 #ET.parse(file): parses uploaded file into an ElementTree.
 
                 # getroot(): gets the root XML tag.
@@ -90,6 +93,7 @@ def upload_file(request):
                         generate_barcode(instance)
                         generate_html_image(instance)
                         instance.save()
+                    return redirect('preview_document', pk=instance.pk)
                 else:
                     messages.error(request, "Unsupported file format.")
                     messages.success(request, "Data imported successfully.")
@@ -122,3 +126,7 @@ def document_pdf(request, doc_id):#doc_id comes from the URL (e.g., /document/pd
     response = HttpResponse(pdf_file, content_type='application/pdf')#content_type='application/pdf' tells the browser how to handle it.
     response['Content-Disposition'] = f'filename="{doc.title}.pdf"'  #Sets the Content-Disposition header to suggest a filename when saving the PDF.
     return response
+
+def preview_document(request, pk):
+    doc = get_object_or_404(ImportedDocument, pk=pk)
+    return render(request, 'core/document_preview.html', {'doc': doc})

@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Document Preview</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+</head>
+<body class="container mt-5">
+    <h2>📄 Document Preview</h2>
+    <hr>
+    <p><strong>Title:</strong> {{ doc.title }}</p>
+    <p><strong>Author:</strong> {{ doc.author }}</p>
+    <p><strong>Type:</strong> {{ doc.doc_type }}</p>
+
+    {% if doc.qr_code %}
+        <div class="mb-3">
+            <strong>QR Code:</strong><br>
+            <img src="{{ doc.qr_code.url }}" alt="QR Code" height="120">
+        </div>
+    {% endif %}
+
+    {% if doc.barcode %}
+        <div class="mb-3">
+            <strong>Barcode:</strong><br>
+            <img src="{{ doc.barcode.url }}" alt="Barcode" height="60">
+        </div>
+    {% endif %}
+
+    {% if doc.html_image %}
+        <div class="mb-3">
+            <strong>HTML Snapshot:</strong><br>
+            <img src="{{ doc.html_image.url }}" alt="HTML Image" class="img-fluid">
+        </div>
+    {% endif %}
+
+    <a href="{% url 'upload_file' %}" class="btn btn-primary">🔙 Back</a>
+</body>
+</html>
