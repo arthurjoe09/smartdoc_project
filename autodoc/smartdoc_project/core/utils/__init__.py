@@ -9,7 +9,7 @@ from django.conf import settings
 import os
 from django.core.files import File
 from io import BytesIO
-from .models import ImportedDocument
+from core.models import ImportedDocument
 
 def generate_qr_code(instance):
     print("🔹 Generating QR for:", instance.title)

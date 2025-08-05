@@ -22,6 +22,8 @@ from django.conf.urls.static import static
 from core.views import upload_file
 from core.views import document_pdf
 from core.views import preview_document
+from core.views import test_log_view
+from core.views import test_log_from_utils
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,6 +32,8 @@ urlpatterns = [
     path('upload-file/', upload_file, name='upload_file'),
     path('pdf/<int:doc_id>/', document_pdf, name='document_pdf'),
     path('preview/<int:pk>/', preview_document, name='preview_document'),
+    path('test-log/', test_log_view,name='test_logging_view'),
+    path('test-log_from_utils/', test_log_from_utils, name='test_logging_view_from_utils'),
 
 ]
 

@@ -2,16 +2,18 @@ from django.shortcuts import render, redirect
 from .forms import DocumentForm
 import pandas as pd
 from django.contrib import messages
-from .models import ImportedDocument
 from .forms import FileUploadForm
 import xml.etree.ElementTree as ET #xml.etree.ElementTree is a module for parsing and creating XML documents.
 from django.template.loader import render_to_string
 from weasyprint import HTML
 from django.http import HttpResponse
-from .models import ImportedDocument
+import logging
+logger = logging.getLogger('core')
 from .utils import generate_qr_code,generate_barcode,generate_html_image
 from django.shortcuts import render, get_object_or_404
 from .models import ImportedDocument
+
+from core.utils.logger import logger
 
 def upload_document(request): #'request' contains everything from the user's HTTP request, such as:form data (request.POST)
                                                                                         #Uploaded files (request.FILES) ,Metadata (headers, user, method, cookies...)
@@ -130,3 +132,15 @@ def document_pdf(request, doc_id):#doc_id comes from the URL (e.g., /document/pd
 def preview_document(request, pk):
     doc = get_object_or_404(ImportedDocument, pk=pk)
     return render(request, 'core/document_preview.html', {'doc': doc})
+
+def test_log_view(request):
+    print("🔁 test_log_view triggered")
+    logger.debug(" Debug log written")
+    logger.info(" Info log written")
+    logger.warning(" Warning log written")
+    logger.error(" Error log written")
+    return HttpResponse("Logs triggered!")
+
+def test_log_from_utils(request):
+    logger.debug("debug log from imported form logger")
+    return HttpResponse("Logs triggred from utils")

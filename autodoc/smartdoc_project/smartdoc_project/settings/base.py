@@ -12,9 +12,23 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+import os
 
+
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent #=smartdoc_project
+
+#for loggin in auto_doc_project
+ROOT_DIR = Path(__file__).resolve().parent.parent.parent.parent.parent #=auto_doc_project
+
+
+LOG_DIR = os.path.join(ROOT_DIR, 'logs')
+if not os.path.exists(LOG_DIR):
+    os.makedirs(LOG_DIR)
+
+print("✅ ROOT_DIR is:", ROOT_DIR)
+print("✅ LOG_DIR is:", LOG_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -128,16 +142,73 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+
+
+WKHTMLTOIMAGE_CMD = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltoimage.exe'
+
+
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'handlers': {
-        'console': { 'class': 'logging.StreamHandler' },
-    },
-    'root': {
-        'handlers': ['console'],
-        'level': 'DEBUG',
-    },
-}
 
-WKHTMLTOIMAGE_CMD = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltoimage.exe'
+    'formatters': {
+        'verbose': {
+        'format': '{asctime} | {levelname:<8} | {name:<12} | PID:{process} | {message}',
+        'style': '{',
+        },
+
+        'simple': {
+        'format': '{levelname} | {message}',
+        'style': '{',
+        },
+    },
+
+    'filters': {
+        'debug_filter': {
+            '()': 'smartdoc_project.log_filters.DebugFilter',
+        },
+        'info_filter': {
+            '()': 'smartdoc_project.log_filters.InfoFilter',
+        },
+        'error_filter': {
+            '()': 'smartdoc_project.log_filters.ErrorFilter',
+        },
+    },
+
+
+
+
+
+    'handlers': {
+        'debug_file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(LOG_DIR, 'debug.log'),
+            'formatter': 'verbose',
+            'filters': ['debug_filter'],
+        },
+        'info_file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(LOG_DIR, 'info.log'),
+            'formatter': 'verbose',
+            'filters': ['info_filter'],
+        },
+        'error_file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(LOG_DIR, 'error.log'),
+            'formatter': 'verbose',
+            'filters': ['error_filter'],
+        },
+    },
+
+    'loggers': {
+        'core': {
+            'handlers': ['debug_file', 'info_file', 'error_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    }
+}
