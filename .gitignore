@@ -38,3 +38,6 @@ dist/
 htmlcov/
 coverage.xml
 .pytest_cache/
+
+#encryption and decryption
+rsa_keys/
